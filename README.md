@@ -1,4 +1,4 @@
-# P10_matrix
+## Overview
 
 This is a Adafruit GFX compatible driver for a single chinese 32x16 RGB LED module.
 
