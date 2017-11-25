@@ -1,6 +1,6 @@
 # P10_matrix
 
-This is a driver for a single chinese 32x16 LED modules commonly used for large-scale LED
+This is a Adafruit GFX compatible driver for a single chinese 32x16 RGB LED modules commonly used for large-scale LED
 displays.
 
 ![P10](/images/P10_matrix.jpg)  
@@ -9,11 +9,15 @@ They are about EUR 15-20 a piece and widely available, e.g. see [aliexpress](htt
 
 This driver only implements 8 colors but it should be rather straightforward to extend it to more colors using some timing magic.
 
+## Display structure
+
 The display is basically a large shift register with a few latch inputs. On the input connector you will find two pins each for Red, Greed and Blue (R1,R2,G1,G2,B1,B2), a 3 bit latch address input (A,B,C), a latch enable input (LAT), a clock input (CLK) and the output enable input (OE).
 
 Each shift register is 64 bits long. Since the matrix is row-organized, R1 and R2 will together cover 128 bits or 4 rows of red. To make it a bit more interesting, the rows are not next to each other but have a spacing of 4. Hence setting R1 and R2 to high, cycling CLK 64 times, setting (A,B) to low and setting LAT to low will light up rows 0,4,8,12. Repeating the same experiment with A low and B high will light up rows 1,5,8,13 and so forth. The same principle applies to the other colors. As the row spacing is 4 we only need A and B for the latch address - C appears to be of no function.
 
 The P10 LED matrix is usually used as a sub-module for larger displays and therefore features a output connector for daisy chaining. On the output connector you will find the identical signals to the input connector where A,B,C,LAT,CLK are simply routed through and R1,R2,G1,G2,B1,B2 are the outputs of the shift registers on the module.  
+
+## Set-up and cabelling
 
 When driving a long chain of panels in a row, splitting the data lines into R1,R2,G1,G2,B1,B2 makes a lot of sense since it reduces the data rate. But since we are only driving a single module here, we really don't need that.
 So in order to reduce the number of inputs we can use jumper wires between input connector (PI) and output connector (PO) as follows:
