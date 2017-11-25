@@ -14,22 +14,25 @@ The P10 LED matrix is usually used as a sub-module for larger displays and there
 When driving a long chain of panels in a row, splitting the data lines into R1,R2,G1,G2,B1,B2 makes a lot of sense since it reduces the data rate. But since we are only driving a single module here, we really don't need that.
 So in order to reduce the number of inputs we can use jumper wires between input connector (PI) and output connector (PO) as follows:
 
-PI     PO
-R2 <-- R1
-G1 <-- R2
-G2 <-- G1
-B1 <-- G2
-B2 <-- B1
+PI | PO
+---|---
+R2 | R1
+R2 | R1
+G1 | R2
+G2 | G1
+B1 | G2
+B2 | B1
 
 This creates once big shift register with 6x64 bits.
 
 Connecting the panel input (PI) to the ESP8266 (ESP) then becomes rather simple:
 
-PI      ESP
-LAT    16
-A      05
-B      04
-C      15 (no function but connected for now)
-P_OE   2
+PI  | ESP
+----|----
+LAT |  16
+A   |  05
+B   |  04
+C   |  15 (no function but connected for now)
+P_OE|  02
 
 If everything is connected correctly you should be able to see "Pixel Time" on the display after running the example.
