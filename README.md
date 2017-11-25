@@ -36,11 +36,11 @@ PI  | ESP
 LAT |  16
 A   |  05
 B   |  04
-C   |  15 (no function but connected for now)
+C (no function but connected for now)  |  15
 P_OE|  02
 CLK |  14
 R1  |   13
 
-If everything is connected correctly you should be able to see "Pixel Time" on the display after running the example. Here an inspirational picture what you can do with your P10 matrix now.
+If everything is connected correctly you should be able to see "Pixel Time" on the display after running the example. Now you can let all your pixel dreams come true - like this weather lock.
 
 ![Example](/images/PixelTime_small.jpg)  
