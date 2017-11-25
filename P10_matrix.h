@@ -1,20 +1,13 @@
 /*********************************************************************
-This is a library for our Monochrome Nokia 5110 LCD Displays
+This is a library for Chinese P10 32x16 LED matrix displays
 
-  Pick one up today in the adafruit shop!
-  ------> http://www.adafruit.com/products/338
+It is based on the 5110 library by Adafruit
 
-These displays use SPI to communicate, 4 or 5 pins are required to
-interface
-
-Adafruit invests time and resources providing this open source code,
-please support Adafruit and open-source hardware by purchasing
-products from Adafruit!
-
-Written by Limor Fried/Ladyada  for Adafruit Industries.
+Written by Dominic Buchstaller.
 BSD license, check license.txt for more information
-All text above, and the splash screen must be included in any redistribution
 *********************************************************************/
+
+
 #ifndef _P10_MATRIX_H
 #define _P10_MATRIX_H
 

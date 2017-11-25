@@ -1,11 +1,10 @@
 /*********************************************************************
-This is a library for chinese P10 32x15 displays
+This is a library for Chinese P10 32x16 LED matrix displays
 
 It is based on the 5110 library by Adafruit
 
 Written by Dominic Buchstaller.
 BSD license, check license.txt for more information
-All text above, and the splash screen below must be included in any redistribution
 *********************************************************************/
 
 //#include <Wire.h>

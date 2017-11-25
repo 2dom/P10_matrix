@@ -45,6 +45,6 @@ P_OE|  02
 CLK |  14
 R1  |   13
 
-If everything is connected correctly you should be able to see "Pixel Time" on the display after running the example. Now you can let all your pixel dreams come true - like this weather lock.
+If everything is connected correctly you should be able to see "Pixel Time" on the display after running the example. Now you can let all your pixel dreams come true - like this weather clock.
 
 ![Example](/images/PixelTime_small.jpg)  
