@@ -30,11 +30,18 @@ BSD license, check license.txt for more information
 
 #define matrix_width 32
 #define matrix_height 16
+#define color_depth 8
+#define color_step 256 / color_depth
+#define color_half_step color_step / 2
+
 #define buffer_size matrix_width * matrix_height * 3 / 8
 
 // the memory buffer for the LCD
-uint8_t P10_MATRIX_buffer[buffer_size] = {0x00 };
+uint8_t P10_MATRIX_buffer[color_depth][buffer_size] = {0x00 };
+uint8_t P10_MATRIX_send_buffer[buffer_size/4] = {0x00 };
+uint16_t P10_color_levels[color_step]={0};
 
+//uint8_t P10_MATRIX_buffer[buffer_size] = {0x00 };
 
 
 
@@ -53,7 +60,13 @@ P10_MATRIX::P10_MATRIX(uint8_t LATCH, uint8_t OE, uint8_t A,uint8_t B,uint8_t C)
   _C_PIN = C;
   _width=matrix_width;
   _height=matrix_height;
-  P10_MATRIX_buffer[0]=0xFF;
+  _display_color=0;
+  for (int this_color=0; this_color<color_depth; this_color++)
+  {
+    P10_color_levels[this_color]=this_color*color_step+color_half_step;
+  }
+
+
 }
 
 //pcd8544_buffer[x+ (y/8)*LCDWIDTH] |= _BV(y%8);
@@ -68,26 +81,30 @@ void P10_MATRIX::drawPixel(int16_t x, int16_t y, uint16_t color) {
   rgb_color[2]= (color & 0x1F) << 3;
 
 
-  for (int col=0; col<3; col++)
-  {
-    // Weird shit access pattern
-    uint16_t total_offset=0;
-    if (y<4)
-      total_offset=(y%4)*48+16*col+(x/8)*2;
-    if ((y>=4) && (y<8))
-      total_offset=(y%4)*48+16*col+(x/8)*2+1;
-    if ((y>=8) && (y<12))
-        total_offset=(y%4)*48+16*col+(x/8)*2+8;
-    if (y>=12)
-      total_offset=(y%4)*48+16*col+(x/8)*2+9;
+    for (int col=0; col<3; col++)
+    {
 
-    //Serial.println(total_offset);
-    //total_offset=0;
-    if (rgb_color[col]>128)
-        P10_MATRIX_buffer[total_offset] |=_BV(x%8);
-    else
-        P10_MATRIX_buffer[total_offset] &= ~_BV(x%8);
-  }
+      // Weird shit access pattern
+      uint16_t total_offset=0;
+      if (y<4)
+        total_offset=(y%4)*48+16*col+(x/8)*2;
+      if ((y>=4) && (y<8))
+        total_offset=(y%4)*48+16*col+(x/8)*2+1;
+      if ((y>=8) && (y<12))
+          total_offset=(y%4)*48+16*col+(x/8)*2+8;
+      if (y>=12)
+        total_offset=(y%4)*48+16*col+(x/8)*2+9;
+
+      //Serial.println(total_offset);
+      //total_offset=0;
+      for (int this_color=0; this_color<color_depth; this_color++)
+      {
+        if (rgb_color[col]>P10_color_levels[this_color])
+            P10_MATRIX_buffer[this_color][total_offset] |=_BV(x%8);
+        else
+          P10_MATRIX_buffer[this_color][total_offset] &= ~_BV(x%8);
+      }
+    }
 }
 
 
@@ -103,6 +120,8 @@ void P10_MATRIX::begin() {
   SPI.begin();
 
   SPI.setDataMode(SPI_MODE0);
+  SPI.setBitOrder(MSBFIRST);
+  SPI.setFrequency(30000000);
   //SPI.setBitOrder(LSBFIRST);
 
 
@@ -113,7 +132,7 @@ void P10_MATRIX::begin() {
   pinMode(_A_PIN, OUTPUT);
   pinMode(_B_PIN, OUTPUT);
   pinMode(_C_PIN, OUTPUT);
-  SPI.begin();
+
 
 
   digitalWrite(_A_PIN, LOW);
@@ -126,32 +145,17 @@ void P10_MATRIX::begin() {
 void P10_MATRIX::display(uint16_t show_time) {
 
 
-  SPI.setBitOrder(MSBFIRST);
-  SPI.setFrequency(20000000);
+  //SPI.setBitOrder(MSBFIRST);
+  //SPI.setFrequency(20000000);
+
   for (uint8_t i=0;i<4;i++)
   {
-    // if (i & B001)
-    //   digitalWrite(_A_PIN,HIGH);
-    // else
-    //   digitalWrite(_A_PIN,LOW);
-    //
-    // if (i & B010)
-    //     digitalWrite(_B_PIN,HIGH);
-    // else
-    //     digitalWrite(_B_PIN,LOW);
-    // if (i & B100)
-    //     digitalWrite(_C_PIN,HIGH);
-    // else
-    //     digitalWrite(_C_PIN,LOW);
-
-
     if (i ==0)
     {
       //digitalWrite(_A_PIN,HIGH);
       digitalWrite(_A_PIN,LOW);
       digitalWrite(_B_PIN,LOW);
       digitalWrite(_C_PIN,LOW);
-
      }
 
      if (i ==1)
@@ -177,11 +181,14 @@ void P10_MATRIX::display(uint16_t show_time) {
 
         }
 
-
-
     //SPI.writeBytes(P10_MATRIX_buffer+i*24,24);
-    for (uint8_t j=0;j<48;j++)
-      SPI.write(P10_MATRIX_buffer[47-j+i*48]);
+      for (uint8_t j=0;j<48;j++)
+        P10_MATRIX_send_buffer[j]= P10_MATRIX_buffer[_display_color][47-j+i*48];
+
+      SPI.writeBytes(P10_MATRIX_send_buffer,48);
+
+
+
     digitalWrite(_LATCH_PIN,HIGH);
     digitalWrite(_LATCH_PIN,LOW);
     digitalWrite(_OE_PIN,0);
@@ -189,12 +196,15 @@ void P10_MATRIX::display(uint16_t show_time) {
     digitalWrite(_OE_PIN,1);
 
   }
-
+   _display_color++;
+   if (_display_color>=color_depth)
+     _display_color=0;
 }
 
 // clear everything
 void P10_MATRIX::clearDisplay(void) {
+  for(int this_color=0;this_color<color_depth;this_color++)
     for (int j=0;j<(buffer_size);j++)
-      P10_MATRIX_buffer[j]=0;
+      P10_MATRIX_buffer[this_color][j]=0;
 
 }
