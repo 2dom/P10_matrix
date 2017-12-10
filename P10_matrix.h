@@ -12,7 +12,7 @@ BSD license, check license.txt for more information
 #define _P10_MATRIX_H
 
 // This is how many color levels the display shows - the more the slower the update
-#define color_depth 8
+#define color_depth 4
 
 #include "Adafruit_GFX.h"
   #include "Arduino.h"

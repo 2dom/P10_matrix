@@ -30,7 +30,6 @@ BSD license, check license.txt for more information
 
 #define matrix_width 32
 #define matrix_height 16
-#define color_depth 8
 #define color_step 256 / color_depth
 #define color_half_step color_step / 2
 

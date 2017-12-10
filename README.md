@@ -36,13 +36,13 @@ Connecting the panel input (PI) to the ESP8266 (ESP) then becomes rather simple:
 
 PI  | ESP
 ----|----
-LAT |  16
-A   |  05
-B   |  04
-C (no function but connected for now)  |  15
-P_OE|  02
-CLK |  14
-R1  |   13
+LAT |  16(D0)
+A   |  05(D1)
+B   |  04(D2)
+C (no function but connected for now)  |  15(D8)
+P_OE|  02(D4)
+CLK |  14(D5)
+R1  |  13(D7)
 
 
 ## Colors
