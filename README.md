@@ -50,6 +50,6 @@ The number of color levels can be selected in the header file. The default (8 co
 
 ![Colors](/images/P10_color_scroll.gif)
 
-If everything is connected correctly you should be able to see "Pixel Time" on the display after running the example. Now you can let all your pixel dreams come true - like this weather clock.
+Now you can let all your pixel dreams come true - like this weather clock.
 
 ![Example](/images/PixelTime_small.jpg)
