@@ -46,7 +46,8 @@ R1  |   13
 
 
 ## Colors
-The number of color levels can be selected in the header file. The default (8 color levels per primary color RGB) works well with hardly any flickering. Note that the number of color levels determines the display update duration. Hence, the more color levels are selected, the more flickering is to be expected. Here is an example with 16 levels.
+The number of color levels can be selected in the header file. The default (8 color levels per primary color RGB) works well with hardly any flickering. Note that the number of color levels determines the display update rate. Hence, the more color levels are selected, the more flickering is to be expected.
+Here is an example with 16 levels.
 
 ![Colors](/images/P10_color_scroll.gif)
 
