@@ -120,7 +120,7 @@ void P10_MATRIX::begin() {
 
   SPI.setDataMode(SPI_MODE0);
   SPI.setBitOrder(MSBFIRST);
-  SPI.setFrequency(30000000);
+  SPI.setFrequency(20000000);
   //SPI.setBitOrder(LSBFIRST);
 
 
