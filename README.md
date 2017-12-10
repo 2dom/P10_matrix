@@ -7,7 +7,7 @@ This is a Adafruit GFX compatible driver for a single chinese 32x16 RGB LED modu
 They are about EUR 15-20 a piece and commonly used for large-scale LED
 displays, e.g. see [aliexpress](https://www.aliexpress.com/item/Freeshipping-SMD3535-outdoor-rgb-led-matrix-p10-module-32x16-wateproof-led-sign-xxx-video-led-wall/32671579710.html?spm=2114.search0104.3.1.CS5xAQ&ws_ab_test=searchweb0_0,searchweb201602_2_10320_10152_10321_10065_10151_10344_10068_10345_10342_10547_10343_10322_10340_10341_10548_10193_10194_10541_10562_10084_10083_10304_10307_10177_10302_10539_10180_10312_10059_10313_10314_10184_10534_10533_100031_10319_10604_10603_10103_10186_10594_10557_10596_10595_10142_10107,searchweb201603_14,ppcSwitch_5&btsid=4c102134-b41b-43b9-bc7b-d7f073a5052e&algo_expid=41b2585a-3330-46a3-8879-ca765ce011fb-0&algo_pvid=41b2585a-3330-46a3-8879-ca765ce011fb&rmStoreLevelAB=2).
 
-This driver only implements 8 colors and currently only works with ESP8266 microcontrollers. However, it should be rather straightforward to extend it to more colors or Atmel based Arduinos.
+This driver corrently only works with ESP8266 microcontrollers. However, it should be rather straightforward to port it to ESP32 or Atmel based Arduinos.
 
 ## Display structure
 
@@ -47,3 +47,5 @@ R1  |   13
 If everything is connected correctly you should be able to see "Pixel Time" on the display after running the example. Now you can let all your pixel dreams come true - like this weather clock.
 
 ![Example](/images/PixelTime_small.jpg)
+
+![Colors](/images/P10_color_scroll.gif)
