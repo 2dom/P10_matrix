@@ -1,6 +1,7 @@
 ## Overview
 
 This is a Adafruit GFX compatible driver for a single chinese 32x16 RGB LED module.
+Note: there are numerous panels out there using different scanning patterns - this driver only works with panels using a 1/4 pattern for now.
 
 ![P10](/images/P10_matrix.jpg)
 
