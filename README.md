@@ -56,6 +56,6 @@ Now you can let all your pixel dreams come true - like this weather clock ...
 
 ![Example](/images/PixelTime_small.jpg)
 
-... or an animated picture frame.
+... or an animated picture frame -  pixels from [ebox](http://hello.eboy.com/eboy/).
 
 ![Example](/images/sea.gif)
