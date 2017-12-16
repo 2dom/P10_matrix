@@ -52,6 +52,10 @@ Here is an example with 16 levels.
 
 ![Colors](/images/P10_color_scroll.gif)
 
-Now you can let all your pixel dreams come true - like this weather clock.
+Now you can let all your pixel dreams come true - like this weather clock ...
 
 ![Example](/images/PixelTime_small.jpg)
+
+... or an animated picture frame.
+
+![Example](/images/sea.gif)
