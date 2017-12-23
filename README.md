@@ -52,6 +52,15 @@ Here is an example with 16 levels.
 
 ![Colors](/images/P10_color_scroll.gif)
 
+## Q/A
+1. My display is showing strange blinking patterns - what is going on?
+..* Reason 1 ... your cabling is wrong. You may want to check with a multimeter if everything is ok (you can just measure between the exposed SMD pads/legs on the input and the ouput panel connector).
+..* Reason 2 ... your display has a different scanning pattern. For example, some displays are organized in 8 row step instead of 4 - like the ones from [Adafruit](https://learn.adafruit.com/32x16-32x32-rgb-led-matrix/how-the-matrix-works). Make sure that you have the exact same display (Aliexpress link above). I will extend the driver to others in the future but for now you are out of luck.
+
+![Cabling](/images/P10_cables.jpg)
+
+
+
 Now you can let all your pixel dreams come true - like this weather clock ...
 
 ![Example](/images/PixelTime_small.jpg)
