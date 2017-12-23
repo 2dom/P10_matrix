@@ -44,7 +44,7 @@ P_OE|  02 - (D4)
 CLK |  14 - (D5)
 R1  |  13 - (D7)
 
-You should end up with something like this (VCC/supply not nonnected yet here):
+You should end up with something like this (VCC/supply not nonnected here yet):
 
 ![Cabling](/images/P10_cables.jpg)
 
