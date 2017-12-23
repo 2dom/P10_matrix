@@ -44,22 +44,25 @@ P_OE|  02 - (D4)
 CLK |  14 - (D5)
 R1  |  13 - (D7)
 
+You should end up with something like this:
+
+![Cabling](/images/P10_cables.jpg)
 
 ## Colors
 The number of color levels can be selected in the header file. The default (8 color levels per primary RGB color) works well with hardly any flickering. Note that the number of color levels determines the achievable display refresh rate. Hence, the more color levels are selected, the more flickering is to be expected. If you run into problems with flickering it is a good idea to increase the CPU frequency to 160MHz. This way the processor has more headroom to compute the display updates and refresh the display in time.
 
 Here is an example with 16 levels.
 
-![Colors](/images/P10_color_scroll.gif)
+
 
 ## Q/A
 1. My display is showing strange blinking patterns - what is going on?
-  * Reason 1 ... your cabling may be wrong. You may want to check with a multimeter if everything is ok (you can just measure between the exposed SMD pads/legs on the input and the ouput panel connector). The final result should look something like in the picture below.
+  * Reason 1 ... your cabling may be wrong. You may want to check with a multimeter if everything is ok (you can just measure between the exposed SMD pads/legs on the input and the ouput panel connector). The final result should look something like in the picture above.
   * Reason 2 ... your display has a different scanning pattern. For example, some displays are organized in 8 row step instead of 4 - like the ones from [Adafruit](https://learn.adafruit.com/32x16-32x32-rgb-led-matrix/how-the-matrix-works). Make sure that you have the exact same display as I do (Aliexpress link above). I will extend the driver to other displays in the future, but for now you are out of luck.
 
-![Cabling](/images/P10_cables.jpg)
 
 
+![Colors](/images/P10_color_scroll.gif)
 
 Now you can let all your pixel dreams come true - like this weather clock ...
 
