@@ -53,7 +53,7 @@ The number of color levels can be selected in the header file. The default (8 co
 
 ## Q/A
 1. My display is showing strange blinking patterns - what is going on?
-  * Reason 1 ... your cabling may be wrong. You may want to check with a multimeter if everything is ok (you can just measure between the exposed SMD pads/legs on the input and the ouput panel connector). The final result should look something like in the picture above.
+  * Reason 1 ... your cabling may be wrong. You may want to check with a multimeter if everything is ok (you can just measure between the exposed SMD pads/legs on the input and the ouput panel connector). 
   * Reason 2 ... your display has a different scanning pattern. For example, some displays are organized in 8 row step instead of 4 - like the ones from [Adafruit](https://learn.adafruit.com/32x16-32x32-rgb-led-matrix/how-the-matrix-works). Make sure that you have the exact same display as I do (Aliexpress link above). I will extend the driver to other displays in the future, but for now you are out of luck.
 
 Here is an example with 16 levels per primary color
