@@ -56,7 +56,7 @@ The number of color levels can be selected in the header file. The default (8 co
   * Reason 1 ... your cabling may be wrong. You may want to check with a multimeter if everything is ok (you can just measure between the exposed SMD pads/legs on the input and the ouput panel connector).
   * Reason 2 ... your display has a different scanning pattern. For example, some displays are organized in 8 row step instead of 4 - like the ones from [Adafruit](https://learn.adafruit.com/32x16-32x32-rgb-led-matrix/how-the-matrix-works). Make sure that you have the exact same display as I do (Aliexpress link above). I will extend the driver to other displays in the future, but for now you are out of luck.
 2. My display is working ok-ish but some lines are not showing up
-Most likely, your PR4538DW LED multiplex chip is defective. You can verify that by selecting a bit pattern on A,B inputs and measuring that the corresponing row outputs are low ([pinout](/docs/pr4538.pdf)), e.g. (A=1,B=0) should give you (LINE0=1,LINE1=0,LINE2=1,LINE3=1).  It can easily be replaced. Spare part is [here](https://www.aliexpress.com/item/Free-shipping-10pcs-lot-PR4538DW-SOP-20-original-authentic/32594044891.html?spm=a2g0s.9042311.0.0.bjr5BY).
+Most likely the PR4538DW LED multiplex chip is defective. You can verify that by selecting a bit pattern on the A,B inputs and measuring that the corresponing row outputs are low ([pinout](/docs/pr4538.pdf)), e.g. (A=1,B=0) should give you (LINE0=1,LINE1=0,LINE2=1,LINE3=1).  It can easily be replaced. Spare part available [here](https://www.aliexpress.com/item/Free-shipping-10pcs-lot-PR4538DW-SOP-20-original-authentic/32594044891.html?spm=a2g0s.9042311.0.0.bjr5BY).
 
 
 ## Examples
