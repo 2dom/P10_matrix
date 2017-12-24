@@ -12,14 +12,15 @@ BSD license, check license.txt for more information
 #define _P10_MATRIX_H
 
 // This is how many color levels the display shows - the more the slower the update
-#define color_depth 8 
+#define color_depth 8
+#define PATTERN4
+//#define PATTERN8
 
 #include "Adafruit_GFX.h"
   #include "Arduino.h"
 
 
 #include <SPI.h>
-
 
 
 
@@ -52,6 +53,7 @@ class P10_MATRIX : public Adafruit_GFX {
   uint32_t _test_pixel_counter;
   uint8_t _test_row_counter;
   unsigned long last_call;
+  void fillMatrixBuffer(int16_t x, int16_t y, uint8_t r, uint8_t g,uint8_t b);
 
 };
 

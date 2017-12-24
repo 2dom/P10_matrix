@@ -74,54 +74,9 @@ P10_MATRIX::P10_MATRIX(uint8_t LATCH, uint8_t OE, uint8_t A,uint8_t B,uint8_t C)
 void P10_MATRIX::drawPixel(int16_t x, int16_t y, uint16_t color) {
   drawPixelRGB565( x,  y,  color);
 }
-//pcd8544_buffer[x+ (y/8)*LCDWIDTH] |= _BV(y%8);
-// the most basic function, set a single pixel
-void P10_MATRIX::drawPixelRGB565(int16_t x, int16_t y, uint16_t color) {
-  if ((x < 0) || (x >= _width) || (y < 0) || (y >= _height))
-    return;
-  x=31-x;
-  uint8_t rgb_color[3];
-  rgb_color[0] = (color & 0xF800) >> 8;
-  rgb_color[1] = (color & 0x07E0) >> 3;
-  rgb_color[2]= (color & 0x1F) << 3;
 
-  //gb_color[0] = ((((color >> 11) & 0x1F) * 527) + 23) >> 6;
-  //rgb_color[1] = ((((color >> 5) & 0x3F) * 259) + 33) >> 6;
-  //rgb_color[2] = (((color & 0x1F) * 527) + 23) >> 6;
-  // int xx=32-x;
-  // if ((y==1) && (xx<10) )
-  //               Serial.print("["+String(xx)+","+String(y)+"]("+String(rgb_color[0]) + ")("+String(rgb_color[1]) + ")("+String(rgb_color[2]) + ") ");
-  // if ((y==2)&&(x==0))
-  //   Serial.println();
-
-    for (int col=0; col<3; col++)
-    {
-
-      // Weird shit access pattern
-      uint16_t total_offset=0;
-      if (y<4)
-        total_offset=(y%4)*48+16*col+(x/8)*2;
-      if ((y>=4) && (y<8))
-        total_offset=(y%4)*48+16*col+(x/8)*2+1;
-      if ((y>=8) && (y<12))
-          total_offset=(y%4)*48+16*col+(x/8)*2+8;
-      if (y>=12)
-        total_offset=(y%4)*48+16*col+(x/8)*2+9;
-
-      //Serial.println(total_offset);
-      //total_offset=0;
-      for (int this_color=0; this_color<color_depth; this_color++)
-      {
-        if (rgb_color[col]>P10_color_levels[this_color])
-            P10_MATRIX_buffer[this_color][total_offset] |=_BV(x%8);
-        else
-          P10_MATRIX_buffer[this_color][total_offset] &= ~_BV(x%8);
-      }
-    }
-}
-
-
-void P10_MATRIX::drawPixelRGB888(int16_t x, int16_t y, uint8_t r, uint8_t g,uint8_t b) {
+void P10_MATRIX::fillMatrixBuffer(int16_t x, int16_t y, uint8_t r, uint8_t g,uint8_t b)
+{
   if ((x < 0) || (x >= _width) || (y < 0) || (y >= _height))
     return;
   x=31-x;
@@ -130,22 +85,8 @@ void P10_MATRIX::drawPixelRGB888(int16_t x, int16_t y, uint8_t r, uint8_t g,uint
   rgb_color[1] = g;
   rgb_color[2]= b;
 
-  // for (int rgb=0; rgb<3;rgb++)
-  // {
-  //   if (rgb_color[rgb]<0)
-  //     rgb_color[rgb]=0;
-  //
-  // }
-
-  //gb_color[0] = ((((color >> 11) & 0x1F) * 527) + 23) >> 6;
-  //rgb_color[1] = ((((color >> 5) & 0x3F) * 259) + 33) >> 6;
-  //rgb_color[2] = (((color & 0x1F) * 527) + 23) >> 6;
-  // int xx=32-x;
-  // if ((y==1) && (xx<10) )
-  //               Serial.print("["+String(xx)+","+String(y)+"]("+String(rgb_color[0]) + ")("+String(rgb_color[1]) + ")("+String(rgb_color[2]) + ") ");
-  // if ((y==2)&&(x==0))
-  //   Serial.println();
-
+#ifdef PATTERN4
+    // Shift register length: 48 bytes, one color: 16 bytes
     for (int col=0; col<3; col++)
     {
 
@@ -160,8 +101,6 @@ void P10_MATRIX::drawPixelRGB888(int16_t x, int16_t y, uint8_t r, uint8_t g,uint
       if (y>=12)
         total_offset=(y%4)*48+16*col+(x/8)*2+9;
 
-      //Serial.println(total_offset);
-      //total_offset=0;
       for (int this_color=0; this_color<color_depth; this_color++)
       {
         if (rgb_color[col]>P10_color_levels[this_color])
@@ -170,6 +109,38 @@ void P10_MATRIX::drawPixelRGB888(int16_t x, int16_t y, uint8_t r, uint8_t g,uint
           P10_MATRIX_buffer[this_color][total_offset] &= ~_BV(x%8);
       }
     }
+#endif
+#ifdef PATTERN8
+    // Shift register length: 24 bytes, one color: 8 bytes
+    for (int col=0; col<3; col++)
+    {
+
+      // (A bit less) weird shit access pattern
+      uint16_t total_offset=0;
+      if (y<8)
+        total_offset=(y%8)*24+8*col+(x/8);
+      else
+        total_offset=(y%8)*24+8*col+(x/8)+4;
+
+      for (int this_color=0; this_color<color_depth; this_color++)
+      {
+        if (rgb_color[col]>P10_color_levels[this_color])
+            P10_MATRIX_buffer[this_color][total_offset] |=_BV(x%8);
+        else
+          P10_MATRIX_buffer[this_color][total_offset] &= ~_BV(x%8);
+      }
+    }
+#endif
+
+}
+
+void P10_MATRIX::drawPixelRGB565(int16_t x, int16_t y, uint16_t color) {
+  fillMatrixBuffer( x,  y, (color & 0xF800) >> 8, (color & 0x07E0) >> 3,(color & 0x1F) << 3);
+}
+
+
+void P10_MATRIX::drawPixelRGB888(int16_t x, int16_t y, uint8_t r, uint8_t g,uint8_t b) {
+  fillMatrixBuffer(x, y, r, g,b);
 }
 
 
@@ -181,16 +152,11 @@ uint8_t P10_MATRIX::getPixel(int8_t x, int8_t y) {
 
 void P10_MATRIX::begin() {
 
-
   SPI.begin();
 
   SPI.setDataMode(SPI_MODE0);
   SPI.setBitOrder(MSBFIRST);
   SPI.setFrequency(20000000);
-  //SPI.setBitOrder(LSBFIRST);
-
-
-
 
   pinMode(_OE_PIN, OUTPUT);
   pinMode(_LATCH_PIN, OUTPUT);
@@ -198,57 +164,49 @@ void P10_MATRIX::begin() {
   pinMode(_B_PIN, OUTPUT);
   pinMode(_C_PIN, OUTPUT);
 
-
-
   digitalWrite(_A_PIN, LOW);
   digitalWrite(_B_PIN, LOW);
   digitalWrite(_C_PIN, LOW);
-  digitalWrite(_OE_PIN, LOW);
+  digitalWrite(_OE_PIN, HIGH);
 
 }
 
 void P10_MATRIX::display(uint16_t show_time) {
-
+#ifdef PATTERN4
   for (uint8_t i=0;i<4;i++)
+#endif
+#ifdef PATTERN8
+  for (uint8_t i=0;i<8;i++)
+#endif
+
   {
-    if (i ==0)
-    {
-      //digitalWrite(_A_PIN,HIGH);
+    if (i & 0x1)
+      digitalWrite(_A_PIN,HIGH);
+    else
       digitalWrite(_A_PIN,LOW);
-      digitalWrite(_B_PIN,LOW);
-      digitalWrite(_C_PIN,LOW);
-     }
 
-     if (i ==1)
-     {
-       digitalWrite(_A_PIN,HIGH);
+    if (i & 0x2)
+       digitalWrite(_B_PIN,HIGH);
+    else
        digitalWrite(_B_PIN,LOW);
-       digitalWrite(_C_PIN,LOW);
 
-      }
-      if (i ==2)
-      {
-        digitalWrite(_A_PIN,HIGH);
-        digitalWrite(_A_PIN,LOW);
-        digitalWrite(_B_PIN,HIGH);
+    if (i & 0x4)
         digitalWrite(_C_PIN,HIGH);
+    else
+        digitalWrite(_C_PIN,LOW);
 
-       }
-       if (i ==3)
-       {
-         digitalWrite(_A_PIN,HIGH);
-         digitalWrite(_B_PIN,HIGH);
-         digitalWrite(_C_PIN,LOW);
-
-        }
-
-
+#ifdef PATTERN4
     for (uint8_t j=0;j<48;j++)
         P10_MATRIX_send_buffer[j]= P10_MATRIX_buffer[_display_color][47-j+i*48];
-
     SPI.writeBytes(P10_MATRIX_send_buffer,48);
+#endif
 
+#ifdef PATTERN8
+    for (uint8_t j=0;j<24;j++)
+        P10_MATRIX_send_buffer[j]= P10_MATRIX_buffer[_display_color][23-j+i*24];
+    SPI.writeBytes(P10_MATRIX_send_buffer,24);
 
+#endif
 
     digitalWrite(_LATCH_PIN,HIGH);
     digitalWrite(_LATCH_PIN,LOW);
@@ -260,6 +218,9 @@ void P10_MATRIX::display(uint16_t show_time) {
    _display_color++;
    if (_display_color>=color_depth)
      _display_color=0;
+
+
+
 }
 
 void P10_MATRIX::flushDisplay(void) {
@@ -267,20 +228,15 @@ void P10_MATRIX::flushDisplay(void) {
   // pinMode(14,OUTPUT);
   // digitalWrite(13,0);
   // digitalWrite(14,0);
+#ifdef PATTERN4
   for (int ii;ii<48;ii++)
     SPI.write(0xFF);
+#endif
 
-
-  // for(int this_pixel=0;this_pixel<192;this_pixel++)
-  // {
-  //
-  //   delay(1);
-  //   digitalWrite(14,1);
-  //   delay(1);
-  //   digitalWrite(14,0);
-  //
-  //
-  // }
+#ifdef PATTERN8
+  for (int ii;ii<24;ii++)
+    SPI.write(0xFF);
+#endif
 
 }
 
