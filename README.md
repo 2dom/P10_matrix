@@ -23,6 +23,7 @@ When driving a long chain of panels in a row, splitting the data lines makes a l
 
 * Green PCB
   ![P10_conn_A](/images/P10_conn_A.jpg)
+
   PI | PO
   ---|---
   R2 | R1
@@ -33,6 +34,7 @@ When driving a long chain of panels in a row, splitting the data lines makes a l
 
 * Black PCB
   ![P10_conn_B](/images/P10_conn_B.jpg)
+
   PI | PO
   ---|---
   R1 | R0
