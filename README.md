@@ -22,6 +22,7 @@ The P10 LED matrix is usually used as a sub-module for larger displays and there
 When driving a long chain of panels in a row, splitting the data lines makes a lot of sense since it reduces the data rate. But since we are only driving a single module here, we really don't need that. So in order to reduce the number of inputs we can use jumper wires between input connector (PI) and output connector (PO) to create one big shift register. Different boards are labled differently - find the one you have below.
 
 * Green PCB
+
   ![P10_conn_A](/images/P10_conn_A.jpg)
 
   PI | PO
@@ -33,6 +34,7 @@ When driving a long chain of panels in a row, splitting the data lines makes a l
   B2 | B1
 
 * Black PCB
+
   ![P10_conn_B](/images/P10_conn_B.jpg)
 
   PI | PO
