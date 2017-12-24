@@ -50,9 +50,8 @@ class P10_MATRIX : public Adafruit_GFX {
   uint8_t _C_PIN;
   uint8_t _width;
   uint8_t _height;
-  uint32_t _test_pixel_counter;
-  uint8_t _test_row_counter;
-  unsigned long last_call;
+  uint16_t _test_pixel_counter;
+  unsigned long _test_last_call;
   void fillMatrixBuffer(int16_t x, int16_t y, uint8_t r, uint8_t g,uint8_t b);
 
 };

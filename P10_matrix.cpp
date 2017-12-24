@@ -60,9 +60,9 @@ P10_MATRIX::P10_MATRIX(uint8_t LATCH, uint8_t OE, uint8_t A,uint8_t B,uint8_t C)
   _width=matrix_width;
   _height=matrix_height;
   _display_color=0;
+
+  _test_last_call=0;
   _test_pixel_counter=0;
-  _test_row_counter=0;
-  last_call=0;
   for (int this_color=0; this_color<color_depth; this_color++)
   {
     P10_color_levels[this_color]=this_color*color_step+color_half_step;
@@ -229,107 +229,50 @@ void P10_MATRIX::flushDisplay(void) {
   // digitalWrite(13,0);
   // digitalWrite(14,0);
 #ifdef PATTERN4
-  for (int ii;ii<48;ii++)
-    SPI.write(0xFF);
+  for (int ii=0;ii<48;ii++)
+    SPI.write(0x00);
 #endif
 
 #ifdef PATTERN8
-  for (int ii;ii<24;ii++)
-    SPI.write(0xFF);
+  for (int ii=0;ii<24;ii++)
+    SPI.write(0x00);
 #endif
 
 }
 
 void P10_MATRIX::displayTestPattern(uint16_t show_time) {
 
-  for (int ii;ii<24;ii++)
-    SPI.write(0x0F);
+
+    if ((millis()-_test_last_call)>1000)
+    {
+
+      //digitalWrite(13,HIGH);
+      //digitalWrite(15,HIGH);
+      //digitalWrite(15,LOW);
+      SPI.write(0xFF);
+
+
+      _test_last_call=millis();
+      _test_pixel_counter++;
+    }
+    if (_test_pixel_counter>48)
+    {
+      _test_pixel_counter=0;
+      flushDisplay();
+
+
+    }
+    digitalWrite(_A_PIN,HIGH);
     digitalWrite(_A_PIN,LOW);
+
     digitalWrite(_B_PIN,LOW);
     digitalWrite(_C_PIN,LOW);
 
     digitalWrite(_LATCH_PIN,HIGH);
     digitalWrite(_LATCH_PIN,LOW);
-
-  digitalWrite(_OE_PIN,0);
-  delayMicroseconds(show_time);
-  digitalWrite(_OE_PIN,1);
-
-  // if ((millis()-last_call)>100)
-  //   _test_pixel_counter++;
-  // else
-  //   return;
-  // yield();
-  // //Serial.print("x");
-  // last_call=millis();
-  // if (_test_pixel_counter>=192)
-  // {
-  //   _test_row_counter++;
-  //   _test_pixel_counter=0;
-  //   flushDisplay();
-  //
-  // }
-  // if (_test_row_counter>3)
-  // {
-  //   _test_row_counter=0;
-  //   _test_pixel_counter=0;
-  //   flushDisplay();
-  //
-  //
-  // }
-  // //
-  // //
-  // //   // if (_test_row_counter & 0x01)
-  // //   //   digitalWrite(_A_PIN,HIGH);
-  // //   // else
-  // //   //   digitalWrite(_A_PIN,LOW);
-  // //   //
-  // //   // if (_test_row_counter & 0x02)
-  // //   //   digitalWrite(_B_PIN,HIGH);
-  // //   // else
-  // //   //   digitalWrite(_B_PIN,LOW);
-  // //   //
-  // //   // if (_test_row_counter & 0x04)
-  // //   //   digitalWrite(_C_PIN,HIGH);
-  // //   // else
-  // //   //   digitalWrite(_C_PIN,LOW);
-  // //
-  //   if (_test_row_counter ==0)
-  //   {
-  //     //digitalWrite(_A_PIN,HIGH);
-  //     digitalWrite(_A_PIN,LOW);
-  //     digitalWrite(_B_PIN,LOW);
-  //     digitalWrite(_C_PIN,LOW);
-  //    }
-  //
-  //    if (_test_row_counter ==1)
-  //    {
-  //      digitalWrite(_A_PIN,HIGH);
-  //      digitalWrite(_B_PIN,LOW);
-  //      digitalWrite(_C_PIN,LOW);
-  //
-  //     }
-  //     if (_test_row_counter ==2)
-  //     {
-  //       digitalWrite(_A_PIN,HIGH);
-  //       digitalWrite(_A_PIN,LOW);
-  //       digitalWrite(_B_PIN,HIGH);
-  //       digitalWrite(_C_PIN,HIGH);
-  //
-  //      }
-  //      if (_test_row_counter ==3)
-  //      {
-  //        digitalWrite(_A_PIN,HIGH);
-  //        digitalWrite(_B_PIN,HIGH);
-  //        digitalWrite(_C_PIN,LOW);
-  //
-  //       }
-  // //
-  // //
-
-
-
-
+    digitalWrite(_OE_PIN,0);
+    delayMicroseconds(show_time);
+    digitalWrite(_OE_PIN,1);
 
 
 }
