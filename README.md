@@ -19,7 +19,7 @@ The P10 LED matrix is usually used as a sub-module for larger displays and there
 
 ## Set-up and cabelling
 
-When driving a long chain of panels in a row, splitting the data lines makes a lot of sense since it reduces the data rate. But since we are only driving a single module here, we really don't need that. We can therefore use jumper wires between input connector (PI) and output connector (PO) to create one big shift register to reduce the number of required pins on the ESP. Different boards are labled differently:
+When driving a long chain of panels in a row, splitting the data lines makes a lot of sense since it reduces the data rate. But since we are only driving a single module here, we really don't need that. We can therefore use jumper wires between input connector (PI) and output connector (PO) to create one big shift register to reduce the number of required pins on the ESP. The labeling differs from board to board:
 
 * Green PCB
 
