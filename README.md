@@ -22,6 +22,7 @@ The P10 LED matrix is usually used as a sub-module for larger displays and there
 When driving a long chain of panels in a row, splitting the data lines into R1,R2,G1,G2,B1,B2 makes a lot of sense since it reduces the data rate. But since we are only driving a single module here, we really don't need that.
 So in order to reduce the number of inputs we can use jumper wires between input connector (PI) and output connector (PO) as follows:
 
+TEST
 PI | PO
 ---|---
 R2 | R1
