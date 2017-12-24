@@ -52,7 +52,7 @@ When driving a long chain of panels in a row, splitting the data lines makes a l
   LAT/STB |  16 - (D0)
   A   |  05 - (D1)
   B   |  04 - (D2)
-  C (no function but connected for now)  |  15 - (D8)
+  C   |  15 - (D8)
   P_OE|  02 - (D4)
   CLK |  14 - (D5)
   R1  |  13 - (D7)
