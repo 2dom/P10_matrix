@@ -13,7 +13,7 @@ This driver corrently only works with ESP8266 microcontrollers. However, it shou
 
 The display is basically a large shift register with a few latch inputs. On the input connector you will find two pins each for Red, Greed and Blue (e.g. R1,R2,G1,G2,B1,B2), a 3 bit latch address input (A,B,C), a latch enable input (LAT/STB), a clock input (CLK) and the output enable input (OE).
 
-There are two basic layouts: 4 row step (4RS) and 8 row step (8RS). YOu can enable your pattern in the header via #define PATTERN4 or #define PATTERN8.
+There are two basic layouts: 4 row step (4RS) and 8 row step (8RS). You can enable your correct pattern for your display in the header via #define PATTERN4 or #define PATTERN8.
 
 Each shift register is 64(4RS)/32(8RS) bits long. Since the matrix is row-organized, R1 and R2 will together cover 128(4RS)/64(8RS) bits. To make it a bit more interesting, the rows are not next to each other but have a spacing of 4(4RS)/8(8RS). In case of 4RS adjacent bytes also jump between line n and n+4.
 
