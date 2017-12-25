@@ -37,7 +37,15 @@ BSD license, check license.txt for more information
 
 // the memory buffer for the LCD
 uint8_t P10_MATRIX_buffer[color_depth][buffer_size] = {0x00 };
+
+#ifdef PATTERN4
 uint8_t P10_MATRIX_send_buffer[buffer_size/4] = {0x00 };
+#endif
+#ifdef PATTERN8
+uint8_t P10_MATRIX_send_buffer[buffer_size/8] = {0x00 };
+#endif
+
+
 uint16_t P10_color_levels[color_step]={0};
 
 //uint8_t P10_MATRIX_buffer[buffer_size] = {0x00 };
@@ -63,6 +71,7 @@ P10_MATRIX::P10_MATRIX(uint8_t LATCH, uint8_t OE, uint8_t A,uint8_t B,uint8_t C)
 
   _test_last_call=0;
   _test_pixel_counter=0;
+  _test_line_counter=0;
   for (int this_color=0; this_color<color_depth; this_color++)
   {
     P10_color_levels[this_color]=this_color*color_step+color_half_step;
@@ -180,17 +189,23 @@ void P10_MATRIX::display(uint16_t show_time) {
 #endif
 
   {
-    if (i & 0x1)
+    digitalWrite(_A_PIN,HIGH);
+    digitalWrite(_B_PIN,HIGH);
+    digitalWrite(_C_PIN,LOW);
+    digitalWrite(_A_PIN,LOW);
+    digitalWrite(_B_PIN,LOW);
+    digitalWrite(_C_PIN,LOW);
+    if (i & 0x01)
       digitalWrite(_A_PIN,HIGH);
     else
       digitalWrite(_A_PIN,LOW);
 
-    if (i & 0x2)
+    if (i & 0x02)
        digitalWrite(_B_PIN,HIGH);
     else
        digitalWrite(_B_PIN,LOW);
 
-    if (i & 0x4)
+    if (i & 0x04)
         digitalWrite(_C_PIN,HIGH);
     else
         digitalWrite(_C_PIN,LOW);
@@ -243,7 +258,7 @@ void P10_MATRIX::flushDisplay(void) {
 void P10_MATRIX::displayTestPattern(uint16_t show_time) {
 
 
-    if ((millis()-_test_last_call)>1000)
+    if ((millis()-_test_last_call)>100)
     {
 
       //digitalWrite(13,HIGH);
@@ -255,18 +270,45 @@ void P10_MATRIX::displayTestPattern(uint16_t show_time) {
       _test_last_call=millis();
       _test_pixel_counter++;
     }
+#ifdef PATTERN4
     if (_test_pixel_counter>48)
+#endif
+#ifdef PATTERN8
+    if (_test_pixel_counter>24)
+#endif
     {
       _test_pixel_counter=0;
+      _test_line_counter++;
       flushDisplay();
-
-
     }
-    digitalWrite(_A_PIN,HIGH);
-    digitalWrite(_A_PIN,LOW);
 
-    digitalWrite(_B_PIN,LOW);
-    digitalWrite(_C_PIN,LOW);
+    if (_test_line_counter>8)
+      _test_line_counter=0;
+
+
+      digitalWrite(_A_PIN,HIGH);
+      digitalWrite(_B_PIN,HIGH);
+      digitalWrite(_C_PIN,LOW);
+      digitalWrite(_A_PIN,LOW);
+      digitalWrite(_B_PIN,LOW);
+      digitalWrite(_C_PIN,LOW);
+
+      //  digitalWrite(_C_PIN,HIGH);
+      if (_test_line_counter & 0x01)
+        digitalWrite(_A_PIN,HIGH);
+      else
+        digitalWrite(_A_PIN,LOW);
+
+
+      if (_test_line_counter & 0x02)
+         digitalWrite(_B_PIN,HIGH);
+      else
+         digitalWrite(_B_PIN,LOW);
+
+      if (_test_line_counter & 0x04)
+          digitalWrite(_C_PIN,HIGH);
+      else
+          digitalWrite(_C_PIN,LOW);
 
     digitalWrite(_LATCH_PIN,HIGH);
     digitalWrite(_LATCH_PIN,LOW);
