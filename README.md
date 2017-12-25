@@ -9,11 +9,15 @@ displays, e.g. see [aliexpress](https://www.aliexpress.com/item/outdoor-320-160m
 
 This driver corrently only works with ESP8266 microcontrollers. However, it should be rather straightforward to port it to ESP32 or Atmel based Arduinos. There are numerous panels wth different scanning patterns out there - this driver only works with panels using a 0,4,8,12 row-pattern for now (details below).
 
-## Display structure (4 row step)
+## Display structure
 
 The display is basically a large shift register with a few latch inputs. On the input connector you will find two pins each for Red, Greed and Blue (e.g. R1,R2,G1,G2,B1,B2), a 3 bit latch address input (A,B,C), a latch enable input (LAT/STB), a clock input (CLK) and the output enable input (OE).
 
-Each shift register is 64 bits long. Since the matrix is row-organized, R1 and R2 will together cover 128 bits or 4 rows of red. To make it a bit more interesting, the rows are not next to each other but have a spacing of 4. Hence setting R1 and R2 to high, cycling CLK 64 times, setting (A,B) to low and setting LAT to low will light up rows 0,4,8,12. Repeating the same experiment with A low and B high will light up rows 1,5,8,13 and so forth. The same principle applies to the other colors. As the row spacing is 4 we only need A and B for the latch address - C appears to be of no function.
+There are two basic layouts: 4 row step (4RS) and 8 row step (8RS). YOu can enable your pattern in the header via #define PATTERN4 or #define PATTERN8.
+
+Each shift register is 64(4RS)/32(8RS) bits long. Since the matrix is row-organized, R1 and R2 will together cover 128(4RS)/64(8RS) bits. To make it a bit more interesting, the rows are not next to each other but have a spacing of 4(4RS)/8(8RS). In case of 4RS adjacent bytes also jump between line n and n+4.
+
+Setting R1 and R2 to high, cycling CLK 64(4RS)/32(8RS) times, setting (A,B,C) to low and setting LAT to low will light up rows 0,4,8,12(4RS)/0,8(8RS). Repeating the same experiment with A low, B high and C low will light up rows 1,5,8,13(4RS)/1,9(8RS) and so forth. The same principle applies to the other colors. As the row spacing for 4RS is 4 we only need A and B for the latch address - C has no function. Only 8RS requires C.
 
 The P10 LED matrix is usually used as a sub-module for larger displays and therefore features a output connector for daisy chaining. On the output connector you will find the identical signals to the input connector where A,B,C,LAT,CLK are simply routed through and (R,G,B) pins are the outputs of the shift registers on the module.
 
@@ -21,7 +25,7 @@ The P10 LED matrix is usually used as a sub-module for larger displays and there
 
 When driving a long chain of panels in a row, splitting the data lines makes a lot of sense since it reduces the data rate. But since we are only driving a single module here, we really don't need that. We can therefore use jumper wires between input connector (PI) and output connector (PO) to create one big shift register to reduce the number of required pins on the ESP. The labeling differs from board to board:
 
-* Green PCB
+* Green PCB (usually 4 row step)
 
   ![P10_conn_A](/images/P10_conn_A.jpg)
 
@@ -33,7 +37,7 @@ When driving a long chain of panels in a row, splitting the data lines makes a l
   B1 | G2
   B2 | B1
 
-* Black PCB
+* Black PCB (usually 8 row step)
 
   ![P10_conn_B](/images/P10_conn_B.jpg)
 
@@ -66,10 +70,10 @@ The number of color levels can be selected in the header file. The default (8 co
 
 ## Q/A
 1. My display is showing strange blinking patterns - what is going on?
-  * Reason 1 ... your cabling may be wrong. You may want to check with a multimeter if everything is ok (you can just measure between the exposed SMD pads/legs on the input and the ouput panel connector).
-  * Reason 2 ... your display has a different scanning pattern. For example, some displays are organized in 8 row step instead of 4 - like the ones from [Adafruit](https://learn.adafruit.com/32x16-32x32-rgb-led-matrix/how-the-matrix-works). Make sure that you have the exact same display as I do (Aliexpress link above). I will extend the driver to other displays in the future, but for now you are out of luck.
-2. My display is working ok-ish but some lines are not showing up.
-  * Most likely the PR4538DW LED multiplex chip is defective. You can verify that by selecting a bit pattern on the A,B inputs and measuring that the corresponing row outputs are low ([pinout](/docs/pr4538.pdf)), e.g. (A=1,B=0) should give you (LINE0=1,LINE1=0,LINE2=1,LINE3=1).  It can easily be replaced. Spare part available [here](https://www.aliexpress.com/item/Free-shipping-10pcs-lot-PR4538DW-SOP-20-original-authentic/32594044891.html?spm=a2g0s.9042311.0.0.bjr5BY).
+  * Check you cabeling with a multimeter. You can just measure between the exposed SMD pads/legs on the input and the ouput panel connector.
+  * Your display may have a different scanning pattern. Make sure that you have selected the correct scanning pattern in the header file (#define PATTERN4 or #define PATTERN8)
+  * Run the "P10_pattern_test.ino" and check if the scanning pattern covers the entire displays
+  * It is possible that the PR4538DW LED multiplex chip is defective. You can verify that by selecting a bit pattern on the A,B inputs and measuring that the corresponing row outputs are low ([pinout](/docs/pr4538.pdf)), e.g. for a 4 row step display (A=1,B=0) should give you (LINE0=1,LINE1=0,LINE2=1,LINE3=1).  It can easily be replaced. Spare part available [here](https://www.aliexpress.com/item/Free-shipping-10pcs-lot-PR4538DW-SOP-20-original-authentic/32594044891.html?spm=a2g0s.9042311.0.0.bjr5BY).
 
 
 ## Examples
