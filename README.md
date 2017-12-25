@@ -53,7 +53,7 @@ When driving a long chain of panels in a row, splitting the data lines makes a l
   B0 | G1
   B1 | B0
 
-* Connect panel input (PI) to the NodeMCU/ESP8266 (ESP)
+* Connect panel input (PI) to the NodeMCU/ESP8266 (ESP) as follows:
 
   PI  | ESP
   ----|----
