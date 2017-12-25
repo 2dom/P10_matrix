@@ -29,6 +29,8 @@ When driving a long chain of panels in a row, splitting the data lines makes a l
 
   ![P10_conn_A](/images/P10_conn_A.jpg)
 
+  Connect PI and PO as follows:
+
   PI | PO
   ---|---
   R2 | R1
@@ -40,6 +42,8 @@ When driving a long chain of panels in a row, splitting the data lines makes a l
 * Black PCB (usually 8 row step)
 
   ![P10_conn_B](/images/P10_conn_B.jpg)
+
+  Connect PI and PO as follows:
 
   PI | PO
   ---|---
