@@ -7,13 +7,13 @@ This is a Adafruit GFX compatible driver for a single chinese 32x16 RGB LED modu
 They are about EUR 15-20 a piece and commonly used for large-scale LED
 displays, e.g. see [aliexpress](https://www.aliexpress.com/item/outdoor-320-160mm-32-16pixels-3in1-SMD-1-2-scan-RGB-P10-full-color-LED-module/32707982524.html?spm=a2g0s.9042311.0.0.OMzudS).
 
-This driver corrently only works with ESP8266 microcontrollers. However, it should be rather straightforward to port it to ESP32 or Atmel-based Arduinos. There are numerous panels wth different scanning patterns out there - this driver only works with panels using a 4 row-step or 8 row-step pattern for now (details below).
+This driver currently works with ESP8266 microcontrollers, however, it should be rather straightforward to port it to ESP32 or Atmel-based Arduinos. There are different panels out there - this driver only works with panels using a 4 row-step or 8 row-step pattern (details below).
 
 ## Display structure
 
 The display basically consists of 6 large shift register. On the input connector you will find the inputs to the shift register (two for each color), e.g. R1,R2,G1,G2,B1,B2, a 3 bit latch address input (A,B,C), a latch enable input (LAT/STB), a clock input (CLK) and the output enable input (OE).
 
-There are two basic layouts/patterns: 4 row-step (4RS) and 8 row-step (8RS). You can enable your correct pattern for your display in the header via #define PATTERN4 or #define PATTERN8.
+There are two basic layouts/patterns: 4 row-step (4RS) and 8 row-step (8RS). You can enable the correct pattern for your display in the header file via #define PATTERN4 or #define PATTERN8.
 
 Each of the shift register is 64(4RS)/32(8RS) bits long. R1 and R2 will together therefore cover 128(4RS)/64(8RS) bits or 4(4RS)/2(8RS) lines respectively. The rows are, however, not next to each other but have a spacing of 4(4RS)/8(8RS). In case of 4RS adjacent bytes also alternate between lines n and n+4.
 
@@ -25,7 +25,7 @@ The P10 LED matrix is usually used as a sub-module for larger displays and there
 
 When driving a long chain of panels in a row, splitting the data lines makes a lot of sense since it reduces the data rate. But since we are only driving a single module here, we really don't need that. We can therefore use jumper wires between input connector (PI) and output connector (PO) to chain all shift registers together and create one big shift register. This reduces the number of required GPIO pins on the ESP. The connector labeling differs from board to board:
 
-* Green PCB (usually 4 row step)
+* Green PCB (usually 4 row-step)
 
   ![P10_conn_A](/images/P10_conn_A.jpg)
 
@@ -39,7 +39,7 @@ When driving a long chain of panels in a row, splitting the data lines makes a l
   B1 | G2
   B2 | B1
 
-* Black PCB (usually 8 row step)
+* Black PCB (usually 8 row-step)
 
   ![P10_conn_B](/images/P10_conn_B.jpg)
 
