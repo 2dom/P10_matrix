@@ -90,6 +90,7 @@ The number of color levels can be selected in the header file. The default (8 co
   * Check you cabeling with a multimeter. You can just measure between the exposed SMD pads/legs on the input and the ouput panel connector.
   * Your display may have a different scanning pattern. Make sure that you have selected the correct scanning pattern in the header file (#define PATTERN4 or #define PATTERN8)
   * Run the "P10_pattern_test.ino" and check if the scanning pattern is appearing ok. For a 8 row-step display it should look like this:
+
   ![8step](/images/8step.gif)
 
   * It is possible that the PR4538DW LED multiplex chip is defective. You can verify that by selecting a bit pattern on the A,B inputs and measuring that the corresponing row outputs are low ([pinout](/docs/pr4538.pdf)), e.g. for a 4 row step display (A=1,B=0) should give you (LINE0=1,LINE1=0,LINE2=1,LINE3=1).  It can easily be replaced. Spare part available [here](https://www.aliexpress.com/item/Free-shipping-10pcs-lot-PR4538DW-SOP-20-original-authentic/32594044891.html?spm=a2g0s.9042311.0.0.bjr5BY).
