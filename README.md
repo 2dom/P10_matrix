@@ -85,8 +85,8 @@ You should end up with something like this (VCC/supply not nonnected here yet):
 ## Colors
 The number of color levels can be selected in the header file. The default (8 color levels per primary RGB color) works well with hardly any flickering. Note that the number of color levels determines the achievable display refresh rate. Hence, the more color levels are selected, the more flickering is to be expected. If you run into problems with flickering it is a good idea to increase the CPU frequency to 160MHz. This way the processor has more headroom to compute the display updates and refresh the display in time.
 
-## Q/A
-1. My display is showing strange blinking patterns - what is going on?
+## Troubleshooting
+
   * Check you cabeling with a multimeter. You can just measure between the exposed SMD pads/legs on the input and the ouput panel connector.
   * Your display may have a different scanning pattern. Make sure that you have selected the correct scanning pattern in the header file (#define PATTERN4 or #define PATTERN8)
   * Run the "P10_pattern_test.ino" and check if the scanning pattern is appearing ok. For a 8 row-step display it should look like this (red then yellow then white line progressing):
