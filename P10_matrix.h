@@ -43,6 +43,7 @@ class P10_MATRIX : public Adafruit_GFX {
 
  private:
   uint8_t _display_color;
+
   uint8_t _LATCH_PIN;
   uint8_t _OE_PIN;
   uint8_t _A_PIN;
@@ -50,6 +51,7 @@ class P10_MATRIX : public Adafruit_GFX {
   uint8_t _C_PIN;
   uint8_t _width;
   uint8_t _height;
+
   uint16_t _test_pixel_counter;
   uint8_t _test_line_counter;
 

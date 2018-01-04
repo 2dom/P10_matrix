@@ -1,4 +1,4 @@
-
+#define PATTERN4
 #include <Ticker.h>
 #include <P10_matrix.h>
 
