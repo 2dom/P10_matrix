@@ -126,7 +126,7 @@ void P10_MATRIX::fillMatrixBuffer(int16_t x, int16_t y, uint8_t r, uint8_t g,uin
   uint8_t total_offset_g=0;
   uint8_t total_offset_b=0;
 
-  // (A bit less) weird shit access pattern 8*col
+  // (A bit less) weird shit access pattern
   if (y<8)
     total_offset_r=base_offset;
   else
@@ -161,7 +161,10 @@ void P10_MATRIX::fillMatrixBuffer(int16_t x, int16_t y, uint8_t r, uint8_t g,uin
 
 
 void P10_MATRIX::drawPixelRGB565(int16_t x, int16_t y, uint16_t color) {
-  fillMatrixBuffer( x,  y, (color & 0xF800) >> 8, (color & 0x07E0) >> 3,(color & 0x1F) << 3);
+  uint8_t r = ((((color >> 11) & 0x1F) * 527) + 23) >> 6;
+  uint8_t g = ((((color >> 5) & 0x3F) * 259) + 33) >> 6;
+  uint8_t b = (((color & 0x1F) * 527) + 23) >> 6;
+  fillMatrixBuffer( x,  y, r, g,b);
 }
 
 
