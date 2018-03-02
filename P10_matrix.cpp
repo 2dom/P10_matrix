@@ -26,7 +26,7 @@ BSD license, check license.txt for more information
 #include <stdlib.h>
 
 #include <Adafruit_GFX.h>
-#include "P10_MATRIX.h"
+#include "P10_matrix.h"
 
 #define matrix_width 32
 #define matrix_height 16
