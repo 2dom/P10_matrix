@@ -1,9 +1,11 @@
+//for P10 16x32
 #define PATTERN4
+//uncomment for P5 32x64
+//#define P5_PATTERN16
 #include <Ticker.h>
 #include <P10_matrix.h>
 
 Ticker display_ticker;
-
 
 // Pins for LED MATRIX
 #define P_LAT 16
@@ -11,7 +13,12 @@ Ticker display_ticker;
 #define P_B 4
 #define P_C 15
 #define P_OE 2
+//uncomment for P5 32x64
+//#define P_D 12
+//for P10 16x32
 P10_MATRIX display( P_LAT, P_OE,P_A,P_B,P_C);
+//uncomment for P5 32x64
+//P10_MATRIX display( P_LAT, P_OE,P_A,P_B,P_C,P_D);
 
 // Some standard colors
 uint16_t myRED = display.color565(255, 0, 0);
@@ -38,14 +45,12 @@ uint8_t weather_icons[]={0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x20,0x00,0x00,0x00,
 };
 
 
-
-
-
-
 // ISR for display refresh
 void display_updater()
 {
   display.display(70);
+  //shows the icons on P5
+  //display.display(30);
 }
 void setup() {
   // put your setup code here, to run once:
