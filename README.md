@@ -1,6 +1,6 @@
 ## Overview
 
-This is a Adafruit GFX compatible driver for a single chinese 32x16 RGB LED module.
+This is a Adafruit GFX compatible driver for a single chinese 32x16 or 64x32 RGB LED module.
 
 ![P10](/images/P10_matrix.jpg)
 
@@ -73,6 +73,33 @@ When driving a long chain of LED modules in a row, parallel color data lines mak
   A   |  05 - (D1)
   B   |  04 - (D2)
   C   |  15 - (D8)
+  P_OE|  02 - (D4)
+  CLK |  14 - (D5)
+  R0  |  13 - (D7)
+
+* 64x32 (usally 16 row-step)  - thanks to irazaq
+
+ ![P10_conn_B](/images/P10_conn_B.jpg)
+
+  Connect PI and PO as follows:
+
+  PI | PO
+  ---|---
+  R1 | R0
+  G0 | R1
+  G1 | G0
+  B0 | G1
+  B1 | B0
+
+  Connect panel input (PI) to the NodeMCU/ESP8266 (ESP) as follows:
+
+  PI  | ESP
+  ----|----
+  STB |  16 - (D0)
+  A   |  05 - (D1)
+  B   |  04 - (D2)
+  C   |  15 - (D8)
+  D   |  12 - (D6) 
   P_OE|  02 - (D4)
   CLK |  14 - (D5)
   R0  |  13 - (D7)
