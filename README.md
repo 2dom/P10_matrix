@@ -7,7 +7,7 @@ This is a Adafruit GFX compatible driver for a single chinese 32x16 or 64x32 RGB
 They are about EUR 15-20 a piece and commonly used for large-scale LED
 displays, e.g. see [aliexpress](https://www.aliexpress.com/item/outdoor-320-160mm-32-16pixels-3in1-SMD-1-2-scan-RGB-P10-full-color-LED-module/32707982524.html?spm=a2g0s.9042311.0.0.OMzudS).
 
-This driver currently works with ESP8266 microcontrollers, however, it should be rather straightforward to port it to ESP32 or Atmel-based Arduinos. There are different panels out there - this driver only works with panels using a 4 row-step or 8 row-step pattern (details below).
+This driver currently works with ESP8266 microcontrollers, however, it should be rather straightforward to port it to ESP32 or Atmel-based Arduinos. There are different panels out there - this driver only works with panels using a 4, 8 or 16 (thanks to irazaq) row-step pattern (details below).
 
 ## Display structure
 
