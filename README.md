@@ -11,13 +11,13 @@ This driver currently works with ESP8266 microcontrollers, however, it should be
 
 ## Display structure
 
-The display basically consists of 6 large shift register. On the input connector you will find the inputs to the shift register (two for each color - Rx,Gx,Bx), a 3 bit latch address input (A,B,C), a latch enable input (LAT/STB), a clock input (CLK) and the output enable input (OE).
+The display basically consists of 6 large shift register. On the input connector you will find the inputs to the shift register (two for each color - Rx,Gx,Bx), a 2 to 4 bit latch address input (A,B,C,D), a latch enable input (LAT/STB), a clock input (CLK) and the output enable input (OE).
 
-There are two basic layouts/patterns: 4 row-step (4RS) and 8 row-step (8RS). You can enable the correct pattern for your display in the header file via #define PATTERN4 or #define PATTERN8.
+There are a few basic layouts/patterns: 4 row-step (4RS),  8 row-step (8RS) or 16 row-step (16RS). You can enable the correct pattern for your display in the header file via #define PATTERN4, #define PATTERN8 or #define PATTERN16.
 
-Each of the shift register is 64(4RS)/32(8RS) bits long. R1 and R2 will together therefore cover 128(4RS)/64(8RS) bits or 4(4RS)/2(8RS) lines respectively. The rows are, however, not next to each other but have a spacing of 4(4RS)/8(8RS). In case of 4RS adjacent bytes also alternate between lines n and n+4.
+The 32x16 displays work like this: Each of the shift register is 64(4RS)/32(8RS) bits long. R1 and R2 will together therefore cover 128(4RS)/64(8RS) bits or 4(4RS)/2(8RS) lines respectively. The rows are, however, not next to each other but have a spacing of 4(4RS)/8(8RS). In case of 4RS adjacent bytes also alternate between lines n and n+4.
 
-Setting Rx to high, cycling CLK 64(4RS)/32(8RS) times, setting (A,B,C) to low and setting LAT/STB to low will light up rows 0,4,8,12(4RS)/0,8(8RS). Repeating the same experiment with A high, B and C low will light up rows 1,5,8,13(4RS)/1,9(8RS) and so forth. The same principle applies to the other colors. As the row spacing for 4RS is 4 we only need A and B for the latch address - C has no function. Only 8RS requires C.
+Setting Rx to high, cycling CLK 64(4RS)/32(8RS) times, setting (A,B,C) to low and setting LAT/STB to low will light up rows 0,4,8,12(4RS)/0,8(8RS). Repeating the same experiment with A high, B and C low will light up rows 1,5,8,13(4RS)/1,9(8RS) and so forth. The same principle applies to the other colors. As the row spacing for 4RS is 4 we only need A and B for the latch address - C has no function. Only 8RS requires C. 16RS will also require a D signal.
 
 The P10 LED matrix is usually used as a sub-module for larger displays and therefore features an output connector for daisy chaining. On the output connector you will find the identical signals to the input connector where A,B,C,LAT,CLK are simply routed through and (R,G,B) pins are the outputs of the shift registers on the module.
 
