@@ -25,7 +25,7 @@ The P10 LED matrix is usually used as a sub-module for larger displays and there
 
 When driving a long chain of LED modules in a row, parallel color data lines make a lot of sense since it reduces the data rate. But since we are only driving a single module here, we really don't need that. We can therefore use jumper wires between input connector (PI) and output connector (PO) to chain all shift registers together and create one big shift register. This has two advantages: it reduces the number of required GPIO pins on the microcontroller and we can use the hardware SPI interface to drive it.
 
-* Green PCB (usually 4 row-step)
+* 32x16 Green PCB (usually 4 row-step)
 
   ![P10_conn_A](/images/P10_conn_A.jpg)
 
@@ -51,7 +51,7 @@ When driving a long chain of LED modules in a row, parallel color data lines mak
   CLK |  14 - (D5)
   R1  |  13 - (D7)
 
-* Black PCB (usually 8 row-step)
+* 32x16 Black PCB (usually 8 row-step)
 
   ![P10_conn_B](/images/P10_conn_B.jpg)
 
@@ -77,7 +77,7 @@ When driving a long chain of LED modules in a row, parallel color data lines mak
   CLK |  14 - (D5)
   R0  |  13 - (D7)
 
-* 64x32 (usally 16 row-step)  - thanks to irazaq
+* 64x32 black PCB (usally 16 row-step)
 
  ![P10_conn_B](/images/P10_conn_B.jpg)
 
