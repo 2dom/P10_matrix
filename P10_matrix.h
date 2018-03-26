@@ -40,6 +40,7 @@ class P10_MATRIX : public Adafruit_GFX {
   uint16_t color565(uint8_t r, uint8_t g, uint8_t b);
   void displayTestPattern(uint16_t showtime);
   void flushDisplay();
+  void setRotate(bool rotate);
 
  private:
   uint8_t _display_color;
@@ -51,6 +52,7 @@ class P10_MATRIX : public Adafruit_GFX {
   uint8_t _C_PIN;
   uint8_t _width;
   uint8_t _height;
+  bool _rotate;
 
   uint16_t _test_pixel_counter;
   uint8_t _test_line_counter;

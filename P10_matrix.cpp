@@ -51,7 +51,7 @@ uint16_t P10_MATRIX::color565(uint8_t r, uint8_t g, uint8_t b) {
   return ((r & 0xF8) << 8) | ((g & 0xFC) << 3) | (b >> 3);
 }
 
-P10_MATRIX::P10_MATRIX(uint8_t LATCH, uint8_t OE, uint8_t A,uint8_t B,uint8_t C) : Adafruit_GFX(matrix_width+10, matrix_height) {
+P10_MATRIX::P10_MATRIX(uint8_t LATCH, uint8_t OE, uint8_t A,uint8_t B,uint8_t C) : Adafruit_GFX(matrix_width+100, matrix_height) {
   _LATCH_PIN = LATCH;
   _OE_PIN = OE;
   _A_PIN= A;
@@ -64,15 +64,31 @@ P10_MATRIX::P10_MATRIX(uint8_t LATCH, uint8_t OE, uint8_t A,uint8_t B,uint8_t C)
   _test_last_call=0;
   _test_pixel_counter=0;
   _test_line_counter=0;
+  _rotate=0;
 
+}
+void P10_MATRIX::setRotate(bool rotate) {
+  _rotate=rotate;
 }
 
 void P10_MATRIX::drawPixel(int16_t x, int16_t y, uint16_t color) {
-  drawPixelRGB565( x,  y,  color);
+
+    drawPixelRGB565( x,  y,  color);
+
+
 }
 
 void P10_MATRIX::fillMatrixBuffer(int16_t x, int16_t y, uint8_t r, uint8_t g,uint8_t b)
 {
+
+
+  if (_rotate){
+    uint16_t temp_x=x;
+    x=y;
+    y=_height-1-temp_x;
+
+  }
+
   if ((x < 0) || (x > _width) || (y < 0) || (y > _height))
   return;
   x=31-x;
@@ -164,7 +180,11 @@ void P10_MATRIX::drawPixelRGB565(int16_t x, int16_t y, uint16_t color) {
   uint8_t r = ((((color >> 11) & 0x1F) * 527) + 23) >> 6;
   uint8_t g = ((((color >> 5) & 0x3F) * 259) + 33) >> 6;
   uint8_t b = (((color & 0x1F) * 527) + 23) >> 6;
-  fillMatrixBuffer( x,  y, r, g,b);
+
+  if (_rotate)
+    fillMatrixBuffer( x,  y, r, g,b);
+  else
+      fillMatrixBuffer( x,  y, r, g,b);
 }
 
 
@@ -280,7 +300,7 @@ void P10_MATRIX::flushDisplay(void) {
 void P10_MATRIX::displayTestPattern(uint16_t show_time) {
 
 
-  if ((millis()-_test_last_call)>100)
+  if ((millis()-_test_last_call)>1000)
   {
 
     //digitalWrite(13,HIGH);
@@ -310,7 +330,7 @@ void P10_MATRIX::displayTestPattern(uint16_t show_time) {
 
   digitalWrite(_A_PIN,HIGH);
   digitalWrite(_B_PIN,HIGH);
-  digitalWrite(_C_PIN,LOW);
+  digitalWrite(_C_PIN,HIGH);
   digitalWrite(_A_PIN,LOW);
   digitalWrite(_B_PIN,LOW);
   digitalWrite(_C_PIN,LOW);
