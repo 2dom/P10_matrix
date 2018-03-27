@@ -1,8 +1,6 @@
-# Note ... this library is deprecated and will not be maintained ... please use the
+# Note ... this library is deprecated and will no longer be maintained
 
-[PxMatrix](https://github.com/2dom/PxMatrix)
-
-library that supports more panels and layouts.
+Please use the [PxMatrix](https://github.com/2dom/PxMatrix) library that supports more panels and layouts and contains performance optimizations.
 
 ## Overview
 
