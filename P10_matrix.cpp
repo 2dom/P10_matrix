@@ -26,7 +26,7 @@ BSD license, check license.txt for more information
 #include <stdlib.h>
 
 #include <Adafruit_GFX.h>
-#include "P10_MATRIX.h"
+#include "P10_matrix.h"
 
 #define matrix_width 32
 #define matrix_height 16
@@ -44,14 +44,16 @@ uint8_t P10_MATRIX_send_buffer[buffer_size/4] = {0x00 };
 #ifdef PATTERN8
 uint8_t P10_MATRIX_send_buffer[buffer_size/8] = {0x00 };
 #endif
-
+#ifdef P5_PATTERN16
+uint8_t P10_MATRIX_send_buffer[buffer_size/16] = {0x00 };
+#endif
 
 // Pass 8-bit (each) R,G,B, get back 16-bit packed color
 uint16_t P10_MATRIX::color565(uint8_t r, uint8_t g, uint8_t b) {
   return ((r & 0xF8) << 8) | ((g & 0xFC) << 3) | (b >> 3);
 }
-
-P10_MATRIX::P10_MATRIX(uint8_t LATCH, uint8_t OE, uint8_t A,uint8_t B,uint8_t C) : Adafruit_GFX(matrix_width+100, matrix_height) {
+// Init code common to both constructors
+void P10_MATRIX::init(uint8_t LATCH, uint8_t OE, uint8_t A,uint8_t B,uint8_t C){
   _LATCH_PIN = LATCH;
   _OE_PIN = OE;
   _A_PIN= A;
@@ -70,12 +72,16 @@ P10_MATRIX::P10_MATRIX(uint8_t LATCH, uint8_t OE, uint8_t A,uint8_t B,uint8_t C)
 void P10_MATRIX::setRotate(bool rotate) {
   _rotate=rotate;
 }
+P10_MATRIX::P10_MATRIX(uint8_t LATCH, uint8_t OE, uint8_t A,uint8_t B,uint8_t C) : Adafruit_GFX(matrix_width+10, matrix_height) {
+    init(LATCH, OE, A, B, C);
+}
+P10_MATRIX::P10_MATRIX(uint8_t LATCH, uint8_t OE, uint8_t A,uint8_t B,uint8_t C,uint8_t D) : Adafruit_GFX(matrix_width+10, matrix_height) {
+  init(LATCH, OE, A, B, C);
+    _D_PIN = D;
+ }
 
 void P10_MATRIX::drawPixel(int16_t x, int16_t y, uint16_t color) {
-
-    drawPixelRGB565( x,  y,  color);
-
-
+  drawPixelRGB565( x,  y,  color);
 }
 
 void P10_MATRIX::fillMatrixBuffer(int16_t x, int16_t y, uint8_t r, uint8_t g,uint8_t b)
@@ -91,7 +97,7 @@ void P10_MATRIX::fillMatrixBuffer(int16_t x, int16_t y, uint8_t r, uint8_t g,uin
 
   if ((x < 0) || (x > _width) || (y < 0) || (y > _height))
   return;
-  x=31-x;
+  x =matrix_width - 1 -x;
 
   #ifdef PATTERN4
   // Shift register length: 48 bytes, one color: 16 bytes
@@ -172,6 +178,43 @@ void P10_MATRIX::fillMatrixBuffer(int16_t x, int16_t y, uint8_t r, uint8_t g,uin
 
 
 #endif
+    #ifdef P5_PATTERN16
+  // Shift register length: 48 bytes, one color: 16 bytes
+  uint16_t base_offset=(y%16)*48+(x/8);
+
+  uint16_t total_offset_r=0;
+  uint16_t total_offset_g=0;
+  uint16_t total_offset_b=0;
+
+   // (A bit less) weird shit access pattern
+  if (y<16){
+      total_offset_r=base_offset;
+  }else{
+      total_offset_r=base_offset+8;
+  }
+
+  total_offset_g=total_offset_r+16;
+  total_offset_b=total_offset_g+16;
+
+  //Simple counting up
+    for (int this_color=0; this_color<color_depth; this_color++)
+      {
+        if (r > this_color*color_step+color_half_step)
+          P10_MATRIX_buffer[this_color][total_offset_r] |=_BV(x%8);
+        else
+          P10_MATRIX_buffer[this_color][total_offset_r] &= ~_BV(x%8);
+
+        if (g > this_color*color_step+color_half_step)
+          P10_MATRIX_buffer[(this_color+4)%8][total_offset_g] |=_BV(x%8);
+        else
+          P10_MATRIX_buffer[(this_color+4)%8][total_offset_g] &= ~_BV(x%8);
+
+        if (b > this_color*color_step+color_half_step)
+          P10_MATRIX_buffer[(this_color+8)%8][total_offset_b] |=_BV(x%8);
+        else
+          P10_MATRIX_buffer[(this_color+8)%8][total_offset_b] &= ~_BV(x%8);
+      }
+# endif
 
 }
 
@@ -212,10 +255,18 @@ void P10_MATRIX::begin() {
   pinMode(_A_PIN, OUTPUT);
   pinMode(_B_PIN, OUTPUT);
   pinMode(_C_PIN, OUTPUT);
+  #ifdef P5_PATTERN16
+  pinMode(_D_PIN, OUTPUT);
+   #endif
 
   digitalWrite(_A_PIN, LOW);
   digitalWrite(_B_PIN, LOW);
   digitalWrite(_C_PIN, LOW);
+    //for P5
+  #ifdef P5_PATTERN16
+   digitalWrite(_D_PIN, LOW);
+  #endif
+
   digitalWrite(_OE_PIN, HIGH);
 
 }
@@ -227,7 +278,9 @@ void P10_MATRIX::display(uint16_t show_time) {
   #ifdef PATTERN8
   for (uint8_t i=0;i<8;i++)
   #endif
-
+  #ifdef P5_PATTERN16
+  for (uint8_t i=0;i<16;i++)
+  #endif
   {
     // digitalWrite(_A_PIN,HIGH);
     // digitalWrite(_B_PIN,HIGH);
@@ -249,6 +302,12 @@ void P10_MATRIX::display(uint16_t show_time) {
     digitalWrite(_C_PIN,HIGH);
     else
     digitalWrite(_C_PIN,LOW);
+     #ifdef P5_PATTERN16
+     if (i & 0x08)
+        digitalWrite(_D_PIN,HIGH);
+     else
+        digitalWrite(_D_PIN,LOW);
+    #endif
 
     #ifdef PATTERN4
     for (uint8_t j=0;j<48;j++)
@@ -260,6 +319,14 @@ void P10_MATRIX::display(uint16_t show_time) {
     for (uint8_t j=0;j<24;j++)
     P10_MATRIX_send_buffer[j]= P10_MATRIX_buffer[_display_color][23-j+i*24];
     SPI.writeBytes(P10_MATRIX_send_buffer,24);
+
+    #endif
+
+    #ifdef P5_PATTERN16
+    for (uint8_t j=0;j<48;j++){
+        P10_MATRIX_send_buffer[j]= P10_MATRIX_buffer[_display_color][47-j+i*48];
+    }
+    SPI.writeBytes(P10_MATRIX_send_buffer,48);
 
     #endif
 
@@ -295,12 +362,17 @@ void P10_MATRIX::flushDisplay(void) {
   SPI.write(0x00);
   #endif
 
+  #ifdef P5_PATTERN16
+  for (int ii=0;ii<48;ii++)
+  SPI.write(0x00);
+  #endif
+
 }
 
 void P10_MATRIX::displayTestPattern(uint16_t show_time) {
 
 
-  if ((millis()-_test_last_call)>1000)
+  if ((millis()-_test_last_call)>100)
   {
 
     //digitalWrite(13,HIGH);
@@ -318,22 +390,27 @@ void P10_MATRIX::displayTestPattern(uint16_t show_time) {
   #ifdef PATTERN8
   if (_test_pixel_counter>24)
   #endif
+   #ifdef P5_PATTERN16
+  if (_test_pixel_counter>48)
+  #endif
   {
     _test_pixel_counter=0;
     _test_line_counter++;
     flushDisplay();
   }
 
-  if (_test_line_counter>8)
-  _test_line_counter=0;
+  if (_test_line_counter> (matrix_height/2))
+        _test_line_counter=0;
 
 
   digitalWrite(_A_PIN,HIGH);
   digitalWrite(_B_PIN,HIGH);
-  digitalWrite(_C_PIN,HIGH);
+  digitalWrite(_C_PIN,LOW);
+  digitalWrite(_D_PIN,HIGH);
   digitalWrite(_A_PIN,LOW);
   digitalWrite(_B_PIN,LOW);
   digitalWrite(_C_PIN,LOW);
+  digitalWrite(_D_PIN,LOW);
 
   //  digitalWrite(_C_PIN,HIGH);
   if (_test_line_counter & 0x01)
@@ -351,6 +428,13 @@ void P10_MATRIX::displayTestPattern(uint16_t show_time) {
   digitalWrite(_C_PIN,HIGH);
   else
   digitalWrite(_C_PIN,LOW);
+
+  #ifdef P5_PATTERN16
+   if (_test_line_counter & 0x08)
+    digitalWrite(_D_PIN,HIGH);
+  else
+    digitalWrite(_D_PIN,LOW);
+  #endif
 
   digitalWrite(_LATCH_PIN,HIGH);
   digitalWrite(_LATCH_PIN,LOW);

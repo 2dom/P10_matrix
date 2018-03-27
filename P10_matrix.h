@@ -15,6 +15,7 @@ BSD license, check license.txt for more information
 #define color_depth 8
 #define PATTERN4
 //#define PATTERN8
+//#define P5_PATTERN16
 
 #include "Adafruit_GFX.h"
   #include "Arduino.h"
@@ -27,6 +28,8 @@ BSD license, check license.txt for more information
 class P10_MATRIX : public Adafruit_GFX {
  public:
   P10_MATRIX(uint8_t LATCH, uint8_t OE, uint8_t A,uint8_t B,uint8_t C);
+  //Constructor for 32x64 panel (adds 'D' pin):
+  P10_MATRIX(uint8_t LATCH, uint8_t OE, uint8_t A,uint8_t B,uint8_t C,uint8_t D);
 
   void begin();
   void clearDisplay(void);
@@ -50,6 +53,7 @@ class P10_MATRIX : public Adafruit_GFX {
   uint8_t _A_PIN;
   uint8_t _B_PIN;
   uint8_t _C_PIN;
+  uint8_t _D_PIN;
   uint8_t _width;
   uint8_t _height;
   bool _rotate;
@@ -59,7 +63,8 @@ class P10_MATRIX : public Adafruit_GFX {
 
   unsigned long _test_last_call;
   void fillMatrixBuffer(int16_t x, int16_t y, uint8_t r, uint8_t g,uint8_t b);
-
+    // Init code common to both constructors
+  void init(uint8_t LATCH, uint8_t OE, uint8_t A,uint8_t B,uint8_t C);
 };
 
 #endif
